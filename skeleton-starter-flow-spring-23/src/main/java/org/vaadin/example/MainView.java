@@ -77,8 +77,6 @@ public class MainView extends VerticalLayout {
                 });
         boton1.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         boton1.addClickShortcut(Key.ENTER);
-        // Use custom CSS classes to apply styling. This is defined in shared-styles.css.
-        addClassName("centered-content");
         add(inputs, boton1, results);
     }
 

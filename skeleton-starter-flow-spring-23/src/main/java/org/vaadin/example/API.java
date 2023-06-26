@@ -7,7 +7,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 public class API {
-    private static final String urlPrefix = "http://localhost:8090/%s/%s";
+    private static final String urlPrefix = "http://pokemonapi:8080/%s/%s";
     public String getPokemonPorNombre(String nombre) throws URISyntaxException, IOException,
             InterruptedException {
         String fullUrl = String.format(urlPrefix, "pokemon/porNombre", nombre);
