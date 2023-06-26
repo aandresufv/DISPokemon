@@ -1,5 +1,8 @@
 package org.vaadin.example;
 
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.flow.component.Key;
@@ -37,29 +40,32 @@ public class MainView extends VerticalLayout {
      *            The message service. Automatically injected Spring managed
      *            bean.
      */
-    public MainView(@Autowired GreetService service) {
-
-        // Use TextField for standard text input
-        TextField textField = new TextField("Your name");
-        textField.addThemeName("bordered");
-
-        // Button click listeners can be defined as lambda expressions
-        Button button = new Button("Say hello",
-                e -> Notification.show(service.greet(textField.getValue())));
-
-        // Theme variants give you predefined extra styles for components.
-        // Example: Primary button has a more prominent look.
-        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        // You can specify keyboard shortcuts for buttons.
-        // Example: Pressing enter in this view clicks the Button.
-        button.addClickShortcut(Key.ENTER);
-
-        // Use custom CSS classes to apply styling. This is defined in
-        // shared-styles.css.
+    public MainView(@Autowired PokemonService service) {
+        HorizontalLayout inputs = new HorizontalLayout();
+        VerticalLayout results = new VerticalLayout();
+        ComboBox<String> comboBox = new ComboBox<>("Selecciona uno...");
+        comboBox.setAllowCustomValue(false);
+        comboBox.setItems("Todos los pokemons", "Por Nombre", "Por tipo");
+        comboBox.setHelperText("Selecciona el tipo de petición");
+        Grid<Pokemon> grid = new Grid<>(Pokemon.class, true);
+        grid.addColumn(Pokemon::getName).setHeader("Nombre");
+        grid.addColumn(Pokemon::getAttack).setHeader("Ataque");
+        grid.addColumn(Pokemon::getDefense).setHeader("Defensa");
+        grid.addColumn(Pokemon::getTipo1).setHeader("Tipo1");
+        grid.addColumn(Pokemon::getSpeedDefense).setHeader("Tipo2");
+        inputs.add(comboBox);
+        Button boton1 = new Button("Lee caracter",
+                e -> {
+                    String tipoPeticion = comboBox.getValue();
+                    try {
+                        results.removeAll();
+                        results.add(service.leePokemon(tipoPeticion));
+                    } catch (Exception ex) {
+                    }
+                });
+        boton1.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        boton1.addClickShortcut(Key.ENTER);
         addClassName("centered-content");
-
-        add(textField, button);
+        add(inputs, boton1, results);
     }
-
 }
